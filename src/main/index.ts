@@ -2,21 +2,23 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
 
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/icon.png'
 
 function createWindow(): void {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
+    width: 900,
+    height: 670,
     show: true,
-    autoHideMenuBar: false,
+    autoHideMenuBar: true,
+    backgroundMaterial: 'mica',
+    backgroundColor: '#17141f',
+    titleBarStyle: 'default',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
     },
   })
-
-  mainWindow.maximize()
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
