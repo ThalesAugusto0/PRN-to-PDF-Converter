@@ -11,7 +11,6 @@ function createWindow(): void {
     show: true,
     autoHideMenuBar: true,
     backgroundMaterial: 'mica',
-    backgroundColor: '#17141f',
     titleBarStyle: 'default',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {

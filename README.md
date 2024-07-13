@@ -32,3 +32,9 @@ $ pnpm build:mac
 # For Linux
 $ pnpm build:linux
 ```
+
+### O que fazer
+
+1. O botão de cancelar deve limpar tudo e voltar para o estado inicial `Selecione um arquivo para começar`.
+2. Criar função que chama o script python para converter e abrir o modal do windows para salvar. 
+3. Criar funcionalidade para remover o arquivo selecionado.
