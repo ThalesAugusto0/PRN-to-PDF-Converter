@@ -4,7 +4,6 @@
   "description": "Conversor de arquivo offline",
   "main": "./out/main/index.js",
   "author": "Thales Augusto <thalesaugusto3@icloud.com>",
-  "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -20,6 +19,33 @@
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux"
   },
+  "build": {
+    "appId": "com.electron.${name}",
+    "productName": "Conversor de Arquivo",
+    "copyright": "Copyright © 2024 - ${author}",
+    "files": [
+      "build//*",
+      "node_modules/**/*"
+    ],
+    "extends": "react-cra",
+    "directories": {
+      "buildResources": "public"
+    },
+    "artifactName": "convert-file${version}-${os}-${arch}.${ext}",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ThalesAugusto0",
+        "repo": "convert-files",
+        "token": "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",
+        "private": true
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "./resources/icon.png"
+    }
+  },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
@@ -33,6 +59,7 @@
     "electron-updater": "^6.1.7",
     "lucide-react": "^0.407.0",
     "next-themes": "^0.3.0",
+    "pdf-lib": "^1.17.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"
   },

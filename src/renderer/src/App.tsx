@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import './styles/global.css'
 
-import { Trash2 } from 'lucide-react'
+import * as fs from 'fs'
+import * as path from 'path'
+import { PDFDocument, StandardFonts } from 'pdf-lib'
 import { useState } from 'react'
 
 import { Button } from './components/ui/button'
@@ -22,46 +25,96 @@ import {
 } from './components/ui/select'
 
 export function App() {
-  const [file, setFile] = useState<File>()
+  const [file, setFile] = useState<File | null>(null)
+  const [selectedFormat, setSelectedFormat] = useState('pdf')
 
-  function handleSelectFile() {
-    const acceptList = ['.prn']
+  function handleSelectFile(): Promise<File | null> {
+    return new Promise((resolve) => {
+      const acceptList = ['.prn']
 
-    const fileInput = document.createElement('input')
-    fileInput.type = 'file'
-    fileInput.accept = acceptList.join(',')
-    fileInput.multiple = false
-    fileInput.style.display = 'none'
-    fileInput.addEventListener(
-      'change',
-      function () {
-        if (this.files && this.files.length > 0) {
-          setFile(this.files[0])
-          const reader = new FileReader()
+      const fileInput = document.createElement('input')
+      fileInput.type = 'file'
+      fileInput.accept = acceptList.join(',')
+      fileInput.multiple = false
+      fileInput.style.display = 'none'
+      fileInput.addEventListener(
+        'change',
+        function () {
+          if (this.files && this.files.length > 0) {
+            setFile(this.files[0])
+            resolve(file)
+            const reader = new FileReader()
 
-          reader.addEventListener(
-            'load',
-            function () {
-              fileInput.remove()
-            },
-            false,
-          )
+            reader.addEventListener(
+              'load',
+              function () {
+                fileInput.remove()
+              },
+              false,
+            )
 
-          reader.readAsDataURL(this.files[0])
-        }
-      },
-      false,
-    )
+            reader.readAsDataURL(this.files[0])
+          }
+        },
+        false,
+      )
 
-    document.body.append(fileInput)
-    fileInput.click()
+      document.body.append(fileInput)
+      fileInput.click()
+    })
   }
 
   function handleRemoveFile() {
-    console.log('Item removido')
+    setFile(null)
   }
 
-  function handleConvert() {}
+  function handleConvert(file: File) {
+    const reader = new FileReader()
+    reader.onload = async (event) => {
+      const prnContent = event.target?.result as string
+
+      // Cria um novo documento PDF
+      const pdfDoc = await PDFDocument.create()
+      let page = pdfDoc.addPage([612, 792])
+
+      const { width, height } = page.getSize()
+      const fontSize = 12
+      const lineHeight = fontSize + 2
+      let y = height - lineHeight
+
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+      const lines = prnContent.split('\n')
+
+      for (const line of lines) {
+        if (y < lineHeight) {
+          page = pdfDoc.addPage([612, 792]) // Adiciona uma nova página se necessário
+          y = height - lineHeight
+        }
+        page.drawText(line, { x: 50, y, size: fontSize, font })
+        y -= lineHeight
+      }
+
+      // Salva o PDF em um Blob
+      const pdfBytes = await pdfDoc.save()
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+
+      // Cria um link para download do PDF
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = file.name.replace('.prn', '.pdf')
+      link.click()
+    }
+    reader.readAsText(file)
+  }
+
+  async function handleConvertFile() {
+    const file = await handleSelectFile()
+    if (file && selectedFormat === 'pdf') {
+      handleConvert(file)
+    } else {
+      console.error('Nenhum arquivo foi selecionado ou formato inválido.')
+    }
+  }
 
   return (
     <div className="h-screen w-screen bg-rotion-900 text-rotion-100 flex">
@@ -83,16 +136,13 @@ export function App() {
                       >
                         {file?.name}
                       </Label>
-                      <Button className="h-12 w-12" variant="ghost">
-                        <Trash2 size={15} onClick={handleRemoveFile} />
-                      </Button>
                     </div>
                   </>
                 ) : (
                   <Button
                     className="w-[300px]"
                     variant="ghost"
-                    onClick={handleSelectFile}
+                    onClick={handleConvertFile}
                   >
                     Selecione um arquivo
                   </Button>
@@ -100,7 +150,7 @@ export function App() {
               </div>
               {file?.name ? (
                 <div>
-                  <Select>
+                  <Select onValueChange={setSelectedFormat}>
                     <SelectTrigger className="w-[300px]">
                       <SelectValue placeholder="Selecione o formato de destino" />
                     </SelectTrigger>
@@ -119,7 +169,7 @@ export function App() {
                   <Button variant="destructive" onClick={handleRemoveFile}>
                     Cancelar
                   </Button>
-                  <Button variant="default" onClick={handleConvert}>
+                  <Button variant="default" onClick={handleConvertFile}>
                     Converter
                   </Button>
                 </div>
