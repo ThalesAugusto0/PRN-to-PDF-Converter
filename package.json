@@ -19,33 +19,6 @@
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux"
   },
-  "build": {
-    "appId": "com.electron.${name}",
-    "productName": "Conversor de Arquivo",
-    "copyright": "Copyright © 2024 - ${author}",
-    "files": [
-      "build//*",
-      "node_modules/**/*"
-    ],
-    "extends": "react-cra",
-    "directories": {
-      "buildResources": "public"
-    },
-    "artifactName": "convert-file${version}-${os}-${arch}.${ext}",
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "ThalesAugusto0",
-        "repo": "convert-files",
-        "token": "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",
-        "private": true
-      }
-    ],
-    "win": {
-      "target": "nsis",
-      "icon": "./resources/icon.png"
-    }
-  },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
@@ -61,7 +34,9 @@
     "next-themes": "^0.3.0",
     "pdf-lib": "^1.17.1",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^1.0.1",
@@ -77,8 +52,6 @@
     "eslint": "^8.57.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "postcss": "^8.4.39",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.2",
     "vite": "^5.3.1"

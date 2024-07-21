@@ -5,12 +5,21 @@ import tailwindcss from 'tailwindcss'
 
 export default defineConfig({
   main: {
+    build: {
+      outDir: 'dist/main',
+    },
     plugins: [externalizeDepsPlugin()],
   },
   preload: {
+    build: {
+      outDir: 'dist/preload',
+    },
     plugins: [externalizeDepsPlugin()],
   },
   renderer: {
+    build: {
+      outDir: 'dist/renderer',
+    },
     css: {
       postcss: {
         plugins: [
