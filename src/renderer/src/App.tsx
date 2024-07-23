@@ -3,6 +3,7 @@ import './styles/global.css'
 
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import { useState } from 'react'
+import { toast, Toaster } from 'sonner'
 
 import { Button } from './components/ui/button'
 import {
@@ -24,7 +25,22 @@ import {
 
 export function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [selectedFormat, setSelectedFormat] = useState('pdf')
+  const [selectedFormat, setSelectedFormat] = useState('')
+
+  const monthMap: { [key: string]: string } = {
+    JAN: 'Janeiro',
+    FEV: 'Fevereiro',
+    MAR: 'Março',
+    ABR: 'Abril',
+    MAI: 'Maio',
+    JUN: 'Junho',
+    JUL: 'Julho',
+    AGO: 'Agosto',
+    SET: 'Setembro',
+    OUT: 'Outubro',
+    NOV: 'Novembro',
+    DEZ: 'Dezembro',
+  }
 
   async function handleSelectFile(): Promise<File | null> {
     return new Promise((resolve) => {
@@ -68,16 +84,43 @@ export function App() {
 
   function handleRemoveFile() {
     setSelectedFile(null)
+    setSelectedFormat('')
   }
 
   async function handleConvert(file: File) {
+    if (!selectedFormat) {
+      toast.error('Selecione um formato de arquivo para continuar', {
+        duration: 1500,
+      })
+      return
+    }
+
     const reader = new FileReader()
 
     reader.onload = async (event) => {
       const prnContent = event.target?.result as string
+      const lines = prnContent.split('\n')
+      let nomeArquivo = file.name.replace(/\.prn$/i, '.pdf')
+
+      for (const line of lines) {
+        if (line.trim().startsWith('NOME : ')) {
+          let nome = line.replace('NOME : ', '').trim()
+          const parts = nome.split('.')
+          if (parts.length > 1) {
+            const mesAbreviado = parts[1].toUpperCase()
+            const mesCompleto = monthMap[mesAbreviado] || mesAbreviado
+            nome = parts[0]
+            const date = new Date()
+            const year = date.getFullYear()
+            nomeArquivo = `${nome}_${mesCompleto}_${year}.pdf`
+          } else {
+            nomeArquivo = `${nome}_${new Date().getFullYear()}.pdf`
+          }
+          break
+        }
+      }
 
       try {
-        // Cria um novo documento PDF
         const pdfDoc = await PDFDocument.create()
         let page = pdfDoc.addPage([612, 792])
 
@@ -87,7 +130,6 @@ export function App() {
         let y = height - lineHeight
 
         const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
-        const lines = prnContent.split('\n')
 
         for (const line of lines) {
           if (y < lineHeight) {
@@ -104,14 +146,12 @@ export function App() {
           y -= lineHeight
         }
 
-        // Salva o PDF em um Blob
         const pdfBytes = await pdfDoc.save()
         const blob = new Blob([pdfBytes], { type: 'application/pdf' })
 
-        // Cria um link para download do PDF
         const link = document.createElement('a')
         link.href = URL.createObjectURL(blob)
-        link.download = file.name.replace(/\.prn$/i, '.pdf')
+        link.download = nomeArquivo
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -125,11 +165,13 @@ export function App() {
     }
 
     reader.readAsText(file)
+    setSelectedFile(null)
+    setSelectedFormat('')
   }
 
   async function handleConvertFile() {
     if (selectedFile) {
-      await handleConvert(selectedFile) // Chama a função de conversão apenas se um arquivo estiver selecionado
+      await handleConvert(selectedFile)
     } else {
       console.error('Nenhum arquivo foi selecionado.')
     }
@@ -139,6 +181,7 @@ export function App() {
     <div className="h-screen w-screen bg-rotion-900 text-rotion-100 flex">
       <div className="flex-1 flex flex-col max-h-screen">
         <main className="flex-1 flex items-center justify-center text-rotion-400">
+          <Toaster position="top-center" richColors closeButton />
           <Card>
             <CardHeader>
               <CardTitle>Converta seu Arquivo</CardTitle>

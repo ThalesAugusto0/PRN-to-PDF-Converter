@@ -35,10 +35,11 @@
     "lucide-react": "^0.407.0",
     "next-themes": "^0.3.0",
     "pdf-lib": "^1.17.1",
-    "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "sonner": "^1.5.0",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^1.0.1",
