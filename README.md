@@ -1,40 +1,57 @@
-# convert-files
+# PRN to PDF Converter
 
-An Electron application with React and TypeScript
+## Overview
 
-## Recommended IDE Setup
+PRN to PDF Converter is a desktop application that converts .prn files to .pdf format. This project is built using Electron with Vite for fast and efficient development, and utilizes TypeScript for type safety. The application uses pnpm for package management, shadcnui for the user interface, and sonner for notifications.
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+## Features
 
-## Project Setup
+* Convert .prn files to .pdf format
+* User-friendly interface with shadcn/ui
+* Real-time notifications with sonner
+* Efficient development setup with Electron Vite
+* Type safety with TypeScript
 
-### Install
+## Technologies Used
+* [Electron Vite](https://electron-vite.org/)
+* [Shadcn/ui](https://ui.shadcn.com/)
+* [Sonner](https://sonner.emilkowal.ski/)
+* [TypeScript](https://www.typescriptlang.org/)
 
+## Installation
+To get started with the project, follow these steps:
+
+1. Clone the repository:
+```bash
+$ git clone git@github.com:ThalesAugusto0/convert-files.git
+$ cd convert-files
+```
+2. Install dependencies using pnpm:
 ```bash
 $ pnpm install
 ```
-
-### Development
-
+3. Run the application:
 ```bash
-$ pnpm dev
+$ pnpm run dev
 ```
 
-### Build
+### Usage
 
-```bash
-# For windows
-$ pnpm build:win
+1. Open the application:
+   Once the application is running, open it from the Electron window.
+2. Select a .prn file:
+   Use the file selector to choose the .prn file you want to convert.
+3. Convert to PDF:
+   Click on the convert button to start the conversion process. The converted .pdf file will be saved in the specified output directory.
 
-# For macOS
-$ pnpm build:mac
+### Contributing
+We welcome contributions! If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcome.
 
-# For Linux
-$ pnpm build:linux
-```
+1. Fork the repository
+2. Create a feature branch (git checkout -b feature-branch)
+3. Commit your changes (git commit -am 'Add some feature')
+4. Push to the branch (git push origin feature-branch)
+5. Create a new Pull Request
 
-### O que fazer
-
-1. [ x ] - O botão de cancelar deve limpar tudo e voltar para o estado inicial `Selecione um arquivo para começar`.
-2. [ x ] - Criar função que chama o script python para converter e abrir o modal do windows para salvar. 
-3. [ x ] - Criar funcionalidade para remover o arquivo selecionado.
+### License
+This project is licensed under the MIT License - see the LICENSE file for details.
