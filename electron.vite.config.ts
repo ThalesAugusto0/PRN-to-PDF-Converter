@@ -6,19 +6,19 @@ import tailwindcss from 'tailwindcss'
 export default defineConfig({
   main: {
     build: {
-      outDir: 'dist/main',
+      outDir: 'out/main',
     },
     plugins: [externalizeDepsPlugin()],
   },
   preload: {
     build: {
-      outDir: 'dist/preload',
+      outDir: 'out/preload',
     },
     plugins: [externalizeDepsPlugin()],
   },
   renderer: {
     build: {
-      outDir: 'dist/renderer',
+      outDir: 'out/renderer',
     },
     css: {
       postcss: {
