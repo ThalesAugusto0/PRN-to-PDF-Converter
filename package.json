@@ -1,6 +1,6 @@
 {
   "name": "convert-files",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Conversor de arquivo offline",
   "main": "./out/main/index.js",
   "author": "Thales Augusto <thalesaugusto3@icloud.com>",
